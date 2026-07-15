@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publix Inventory API</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green:   #007749;
+      --green-lt:#e6f2ec;
+      --text:    #1a1a18;
+      --muted:   #6b6b67;
+      --border:  rgba(0,0,0,0.10);
+      --surface: #f8f8f6;
+      --mono: "SF Mono","Fira Code",Consolas,monospace;
+      --sans: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    body { font-family: var(--sans); background: var(--surface); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header {
+      background: var(--green);
+      padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display:flex; align-items:center; gap:10px; color:#fff; font-size:18px; font-weight:600; letter-spacing:-.01em; }
+    .logo-icon { width:32px; height:32px; background:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; }
+    .logo-icon i { font-size:18px; color:var(--green); }
+    .header-badge { font-size:11px; background:rgba(255,255,255,0.18); border:0.5px solid rgba(255,255,255,0.3); border-radius:4px; padding:3px 8px; color:#fff; font-family:var(--mono); }
+
+    main { flex:1; max-width:860px; margin:0 auto; padding:48px 24px; width:100%; }
+
+    .hero { text-align:center; margin-bottom:48px; }
+    .pill { display:inline-flex; align-items:center; gap:6px; background:var(--green-lt); border:0.5px solid var(--green); border-radius:20px; padding:4px 12px; font-size:12px; font-weight:500; color:var(--green); margin-bottom:18px; }
+    .pill .dot { width:6px; height:6px; border-radius:50%; background:var(--green); }
+    h1 { font-size:32px; font-weight:600; letter-spacing:-.02em; margin-bottom:12px; }
+    .subtitle { font-size:15px; color:var(--muted); line-height:1.6; max-width:520px; margin:0 auto 28px; }
+    .cta-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .btn { display:inline-flex; align-items:center; gap:7px; padding:10px 20px; border-radius:8px; font-size:13px; font-weight:500; text-decoration:none; transition:opacity .15s; }
+    .btn-primary { background:var(--green); color:#fff; }
+    .btn-primary:hover { opacity:.88; }
+    .btn-secondary { background:#fff; color:var(--text); border:0.5px solid var(--border); box-shadow:0 1px 3px rgba(0,0,0,.06); }
+    .btn-secondary:hover { background:var(--surface); }
+
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:40px; }
+    .stat { background:#fff; border:0.5px solid var(--border); border-radius:10px; padding:18px 16px; text-align:center; }
+    .stat-num { font-size:28px; font-weight:600; color:var(--green); letter-spacing:-.02em; }
+    .stat-lbl { font-size:11px; color:var(--muted); margin-top:3px; }
+
+    h2 { font-size:16px; font-weight:600; margin-bottom:14px; }
+    .endpoints { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:40px; }
+    .ep-card { background:#fff; border:0.5px solid var(--border); border-radius:8px; padding:14px; display:flex; align-items:flex-start; gap:10px; }
+    .ep-left { flex-shrink:0; }
+    .method { font-size:10px; font-weight:600; font-family:var(--mono); padding:2px 7px; border-radius:3px; background:#e8f2ee; color:var(--green); border:0.5px solid #a8d4be; }
+    .ep-path { font-size:12px; font-family:var(--mono); color:var(--text); margin-top:5px; word-break:break-all; }
+    .ep-path .pm { color:var(--green); }
+    .ep-desc { font-size:11px; color:var(--muted); margin-top:3px; line-height:1.5; }
+
+    .curl-box { background:#1a1a18; border-radius:10px; padding:20px; margin-bottom:40px; }
+    .curl-title { font-size:11px; color:#888; text-transform:uppercase; letter-spacing:.06em; margin-bottom:12px; }
+    .curl-row { display:flex; align-items:flex-start; gap:10px; margin:6px 0; }
+    .curl-label { font-size:10px; color:#666; font-family:var(--mono); min-width:64px; padding-top:2px; }
+    .curl-cmd { font-size:12px; color:#e0e0da; font-family:var(--mono); line-height:1.6; word-break:break-all; }
+    .curl-cmd .c-g { color:#7ec89a; }
+    .curl-cmd .c-b { color:#79b8f8; }
+    .curl-cmd .c-y { color:#e3c07f; }
+
+    footer { text-align:center; padding:20px; font-size:11px; color:var(--muted); border-top:0.5px solid var(--border); }
+
+    @media(max-width:600px){
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .endpoints { grid-template-columns:1fr; }
+      header { padding:12px 16px; }
+      main { padding:28px 16px; }
+      h1 { font-size:24px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon"><i class="ti ti-building-store"></i></div>
+    Publix Inventory API
+  </div>
+  <span class="header-badge">v1.0.0 · OpenAPI 3.1</span>
+</header>
+
+<main>
+
+  <div class="hero">
+    <div class="pill"><div class="dot"></div> Live on Render &nbsp;·&nbsp; No auth required &nbsp;·&nbsp; Read-only</div>
+    <h1>Publix Supermarket<br>Inventory Query API</h1>
+    <p class="subtitle">Real-time stock levels, product catalog, store locations, and category browsing across all Publix locations. Fully public — no API key needed.</p>
+    <div class="cta-row">
+      <a href="/docs" class="btn btn-primary"><i class="ti ti-book-2" style="font-size:15px"></i> Swagger UI Docs</a>
+      <a href="/api/openapi.json" class="btn btn-secondary"><i class="ti ti-braces" style="font-size:15px"></i> OpenAPI JSON</a>
+      <a href="/health" class="btn btn-secondary"><i class="ti ti-activity" style="font-size:15px"></i> Health Check</a>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num">44</div><div class="stat-lbl">Products (SKUs)</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Store Locations</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">Categories</div></div>
+    <div class="stat"><div class="stat-num">13</div><div class="stat-lbl">API Endpoints</div></div>
+  </div>
+
+  <h2>Endpoints</h2>
+  <div class="endpoints">
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/inventory</div>
+        <div class="ep-desc">Browse all stock across stores with filters</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/inventory/<span class="pm">{sku}</span></div>
+        <div class="ep-desc">Stock levels for a single SKU by store</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/inventory/low-stock</div>
+        <div class="ep-desc">Items at or below restock threshold (≤20 units)</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/inventory/search</div>
+        <div class="ep-desc">Full-text search by product name or SKU</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/products</div>
+        <div class="ep-desc">Full product catalog with filters</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/products/<span class="pm">{sku}</span>/availability</div>
+        <div class="ep-desc">Product detail + live stock in one call</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/stores</div>
+        <div class="ep-desc">All active Publix store locations</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/stores/<span class="pm">{storeId}</span>/summary</div>
+        <div class="ep-desc">Store-level inventory snapshot</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/categories</div>
+        <div class="ep-desc">All categories with product counts</div>
+      </div>
+    </div>
+    <div class="ep-card">
+      <div class="ep-left"><span class="method">GET</span></div>
+      <div>
+        <div class="ep-path">/api/categories/<span class="pm">{slug}</span>/inventory</div>
+        <div class="ep-desc">Stock overview for a category</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Example requests</h2>
+  <div class="curl-box">
+    <div class="curl-title">curl examples</div>
+    <div class="curl-row">
+      <span class="curl-label">all stores</span>
+      <code class="curl-cmd"><span class="c-g">curl</span> <span class="c-b">https://publix-inventory-api.onrender.com</span><span class="c-y">/api/inventory?category=produce&amp;in_stock=true</span></code>
+    </div>
+    <div class="curl-row">
+      <span class="curl-label">search</span>
+      <code class="curl-cmd"><span class="c-g">curl</span> <span class="c-b">https://publix-inventory-api.onrender.com</span><span class="c-y">/api/inventory/search?q=oat+milk</span></code>
+    </div>
+    <div class="curl-row">
+      <span class="curl-label">by SKU</span>
+      <code class="curl-cmd"><span class="c-g">curl</span> <span class="c-b">https://publix-inventory-api.onrender.com</span><span class="c-y">/api/products/PRD-BAN-ORG/availability</span></code>
+    </div>
+    <div class="curl-row">
+      <span class="curl-label">low stock</span>
+      <code class="curl-cmd"><span class="c-g">curl</span> <span class="c-b">https://publix-inventory-api.onrender.com</span><span class="c-y">/api/inventory/low-stock?store_id=store_FL01</span></code>
+    </div>
+    <div class="curl-row">
+      <span class="curl-label">summary</span>
+      <code class="curl-cmd"><span class="c-g">curl</span> <span class="c-b">https://publix-inventory-api.onrender.com</span><span class="c-y">/api/stores/store_FL01/summary</span></code>
+    </div>
+  </div>
+
+</main>
+
+<footer>Publix Inventory API &nbsp;·&nbsp; v1.0.0 &nbsp;·&nbsp; OpenAPI 3.1 &nbsp;·&nbsp; Deployed on Render &nbsp;·&nbsp; Mock data only</footer>
+
+</body>
+</html>
