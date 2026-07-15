@@ -4,9 +4,9 @@ Public, read-only REST API for querying Publix supermarket inventory across all 
 
 Built with **Node.js + Express**, interactive docs via **Swagger UI**, deployed on **Render**.
 
-**Live:** https://publix-inventory-api.onrender.com  
-**Swagger UI:** https://publix-inventory-api.onrender.com/docs  
-**OpenAPI spec:** https://publix-inventory-api.onrender.com/api/openapi.json
+**Live:** https://publix-inventory.onrender.com  
+**Swagger UI:** https://publix-inventory.onrender.com/docs  
+**OpenAPI spec:** https://publix-inventory.onrender.com/api/openapi.json
 
 ---
 
@@ -27,8 +27,8 @@ publix-inventory-api/
 ## Quick start
 
 ```bash
-git clone https://github.com/your-username/publix-inventory-api.git
-cd publix-inventory-api
+git clone https://github.com/your-username/publix-inventory.git
+cd publix-inventory
 npm install
 npm start
 # → http://localhost:3000
@@ -168,7 +168,7 @@ Empty body `{}` returns all categories.
 ## curl examples
 
 ```bash
-BASE=https://publix-inventory-api.onrender.com
+BASE=https://publix-inventory.onrender.com
 
 # Browse produce in stock at Brickell
 curl -X POST $BASE/api/inventory \
