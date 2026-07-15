@@ -4,9 +4,9 @@ Public, read-only REST API for querying Publix supermarket inventory across all 
 
 Built with **Node.js + Express**, interactive docs via **Swagger UI**, deployed on **Render**.
 
-**Live:** https://publix-inventory-api.onrender.com  
-**Swagger UI:** https://publix-inventory-api.onrender.com/docs  
-**OpenAPI spec:** https://publix-inventory-api.onrender.com/api/openapi.json
+**Live:** https://publix-inventory.onrender.com  
+**Swagger UI:** https://publix-inventory.onrender.com/docs  
+**OpenAPI spec:** https://publix-inventory.onrender.com/api/openapi.json
 
 ---
 
@@ -61,22 +61,22 @@ npm start
 
 ```bash
 # All produce in stock at Brickell store
-curl "https://publix-inventory-api.onrender.com/api/inventory?store_id=store_FL01&category=produce&in_stock=true"
+curl "https://publix-inventory.onrender.com/api/inventory?store_id=store_FL01&category=produce&in_stock=true"
 
 # Search for oat milk
-curl "https://publix-inventory-api.onrender.com/api/inventory/search?q=oat+milk"
+curl "https://publix-inventory.onrender.com/api/inventory/search?q=oat+milk"
 
 # Product detail + stock across all stores
-curl "https://publix-inventory-api.onrender.com/api/products/PRD-BAN-ORG/availability"
+curl "https://publix-inventory.onrender.com/api/products/PRD-BAN-ORG/availability"
 
 # Low-stock alerts at Wynwood store
-curl "https://publix-inventory-api.onrender.com/api/inventory/low-stock?store_id=store_FL03"
+curl "https://publix-inventory.onrender.com/api/inventory/low-stock?store_id=store_FL03"
 
 # Inventory snapshot for a store
-curl "https://publix-inventory-api.onrender.com/api/stores/store_FL01/summary"
+curl "https://publix-inventory.onrender.com/api/stores/store_FL01/summary"
 
 # All dairy products, organic only
-curl "https://publix-inventory-api.onrender.com/api/products?category=dairy&organic=true"
+curl "https://publix-inventory.onrender.com/api/products?category=dairy&organic=true"
 ```
 
 ---
